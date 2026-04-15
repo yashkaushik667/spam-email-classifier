@@ -1,0 +1,150 @@
+# SPAM EMAIL CLASSIFIER
+
+**Machine Learning Project Documentation**
+
+Date: [11/04/2026]
+Author: [Yash Kaushik]
+
+---
+
+## 1. Problem Statement
+
+**What problem does this project solve?**
+Email spam leads to productivity loss and potential security risks such as phishing and fraud. This project builds a machine learning model that automatically classifies emails as spam or ham (not spam), helping users filter unwanted messages.
+
+**Why does this problem matter?**
+Manual filtering of emails is inefficient and unreliable at scale. An automated spam classifier saves time, improves user experience, and enhances security by reducing exposure to malicious content.
+
+**What is the expected output of the model?**
+The model outputs a binary label:
+
+* Spam → 1
+* Ham (Not Spam) → 0
+
+---
+
+## 2. Dataset
+
+**Dataset Name & Source:**
+spam.csv (Email/SMS Spam Dataset)
+
+**Dataset Size:**
+Total samples: 5172
+
+**Key Observations from EDA:**
+
+1. Spam messages often contain words like “free”, “win”, “offer”, and “money”.
+2. Spam messages are generally longer and more promotional in nature.
+3. Dataset is imbalanced, with more ham messages than spam messages.
+
+**Class Distribution Table:**
+
+| Class          | Count                     | Percentage |
+| -------------- | ------------------------- | ---------- |
+| Ham (Not Spam) | 965                       | ~86.5%     |
+| Spam           | 151                       | ~13.5%     |
+| Total          | 1116 (test split example) | 100%       |
+
+---
+
+## 3. Data Preprocessing
+
+Steps applied to clean and prepare the text data:
+
+1. Converted all text to lowercase
+2. Removed punctuation and special characters
+3. Removed stopwords using NLTK
+4. Applied stemming using Porter Stemmer
+5. Converted text into numerical features using TF-IDF Vectorizer
+
+**Why TF-IDF and not simple word count?**
+TF-IDF assigns higher importance to words that are unique to specific documents and reduces the weight of commonly used words. This helps the model better distinguish between spam and ham messages.
+
+---
+
+## 4. Model Selection
+
+Three models were trained and compared:
+
+| Model               | Accuracy | Precision | Recall | F1 Score |
+| ------------------- | -------- | --------- | ------ | -------- |
+| Naive Bayes         | 0.9686   | 1.0000    | 0.7667 | 0.8679   |
+| Logistic Regression | 0.9569   | 0.9636    | 0.7067 | 0.8154   |
+| Random Forest       | 0.9785   | 0.9922    | 0.8467 | 0.9137   |
+
+**Selected Model:**
+Multinomial Naive Bayes
+
+**Why this model?**
+Multinomial Naive Bayes is computationally efficient and well-suited for text classification problems. It performs well with TF-IDF features and provides strong baseline performance.
+
+**Why use F1 Score instead of Accuracy?**
+The dataset is imbalanced. A model could achieve high accuracy by predicting most emails as ham. F1 Score provides a better balance between precision and recall, giving a more realistic evaluation.
+
+---
+
+## 5. Results
+
+**Final Model Performance (Test Set)**
+
+| Metric    | Value  | What it means                         |
+| --------- | ------ | ------------------------------------- |
+| Accuracy  | 0.9686 | Percentage of correct predictions     |
+| Precision | 1.0000 | All predicted spam were actually spam |
+| Recall    | 0.7667 | Model detected ~76.7% of actual spam  |
+| F1 Score  | 0.8679 | Balance between precision and recall  |
+
+---
+
+### Confusion Matrix
+
+|             | Predicted Ham | Predicted Spam |
+| ----------- | ------------- | -------------- |
+| Actual Ham  | 961 (TN)      | 4 (FP)         |
+| Actual Spam | 44 (FN)       | 106 (TP)       |
+
+**Interpretation:**
+
+* Very low false positives (only 4) → important emails rarely marked as spam
+* Some false negatives (44) → some spam messages are missed
+* Model is highly precise but slightly conservative
+
+---
+
+## 6. Limitations
+
+1. TF-IDF does not capture word order or context
+2. Model may not generalize well to new types of spam
+3. Dataset imbalance affects recall performance
+4. Some spam messages may still bypass detection (false negatives)
+
+---
+
+## 7. How to Run the Project
+
+**Requirements:**
+
+* Python 3.8+
+* Libraries: pandas, scikit-learn
+
+**Installation:**
+
+```
+pip install pandas scikit-learn
+```
+
+Steps:
+1. Clone or download the project folder
+2. Ensure the dataset file spam.csv is present
+3. Run the Python notebook or script
+4. Train the model and evaluate results
+5. Use the predict_email() function to classify new messages
+---
+
+## 8. References
+
+1. Dataset: spam.csv (SMS/Email Spam Dataset)
+2. Scikit-learn Documentation: https://scikit-learn.org
+3. NLTK Documentation: https://www.nltk.org
+
+---
